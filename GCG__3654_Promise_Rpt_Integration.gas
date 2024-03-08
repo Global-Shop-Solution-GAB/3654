@@ -1,0 +1,263 @@
+Program.Sub.ScreenSU.Start
+gui.SS_Form1..create
+gui.SS_Form1..caption("GCG Promise Report Integration")
+gui.SS_Form1..size(2665,1810)
+gui.SS_Form1..position(0,0)
+gui.SS_Form1..alwaysontop(False)
+gui.SS_Form1..fontname("Arial")
+gui.SS_Form1..fontsize(8)
+gui.SS_Form1..forecolor(0)
+gui.SS_Form1..fontstyle(,,,,)
+gui.SS_Form1..BackColor(-2147483633)
+gui.SS_Form1..controlbox(True)
+gui.SS_Form1..maxbutton(False)
+gui.SS_Form1..minbutton(False)
+gui.SS_Form1..mousepointer(0)
+gui.SS_Form1..moveable(True)
+gui.SS_Form1..sizeable(False)
+gui.SS_Form1..ShowInTaskBar(True)
+gui.SS_Form1..titlebar(True)
+gui.SS_Form1.lbl_txtrpt.create(label,"Promise Report",True,1800,200,1,100,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtrpt.create(textbox,"",True,1800,330,1,100,335,True,0,Arial,8,16777215,1)
+Gui.SS_Form1.cmd_txtrpt.create(button)
+gui.SS_Form1.cmd_txtrpt.Caption("^")
+gui.SS_Form1.cmd_txtrpt.visible(True)
+gui.SS_Form1.cmd_txtrpt.size(330,330)
+gui.SS_Form1.cmd_txtrpt.position(1985,335)
+gui.SS_Form1.cmd_txtrpt.enabled(True)
+gui.SS_Form1.cmd_txtrpt.fontname("Arial")
+gui.SS_Form1.cmd_txtrpt.fontsize(8)
+gui.SS_Form1.cmdRun.create(button)
+gui.SS_Form1.cmdRun.Caption("Run")
+gui.SS_Form1.cmdRun.visible(True)
+gui.SS_Form1.cmdRun.size(1000,360)
+gui.SS_Form1.cmdRun.position(100,835)
+gui.SS_Form1.cmdRun.enabled(True)
+gui.SS_Form1.cmdRun.fontname("Arial")
+gui.SS_Form1.cmdRun.fontsize(8)
+gui.SS_Form1.txtrpt.tabstop(true)
+gui.SS_Form1.txtrpt.tabindex(1)
+gui.SS_Form1.cmd_txtrpt.tabstop(true)
+gui.SS_Form1.cmd_txtrpt.tabindex(2)
+gui.SS_Form1.cmdRun.tabstop(true)
+gui.SS_Form1.cmdRun.tabindex(3)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.UDT.loadFile.Define("SNo",String)
+Variable.UDT.loadFile.Define("Part",String)
+Variable.UDT.loadFile.Define("PO",String)
+Variable.UDT.loadFile.Define("PoType",String)
+Variable.UDT.loadFile.Define("Branch",String)
+Variable.UDT.loadFile.Define("LT",String)
+Variable.UDT.loadFile.Define("Received",Long)
+Variable.UDT.loadFile.Define("SNR",String)
+Variable.UDT.loadFile.Define("NeedQty",Long)
+Variable.UDT.loadFile.Define("NeedDate",Date,"","M/D/YYYY")
+Variable.UDT.loadFile.Define("PromiseToNeed",String)
+Variable.UDT.loadFile.Define("CommQty",Long)
+Variable.UDT.loadFile.Define("CommDate",String)
+Variable.UDT.loadFile.Define("ReasonCode",String)
+Variable.UDT.loadFile.Define("Comment",String)
+Variable.UDT.loadFile.Define("LastUpdate",String)
+Variable.UDT.loadFile.Define("LineNo",Long)
+Variable.UDT.loadFile.Define("R",String)
+Variable.UDT.loadFile.Define("S",String)
+Variable.UDT.loadFile.Define("IP",String)
+Variable.UDT.loadFile.Define("WO",String)
+Variable.UDT.loadFile.Define("Sort",String)
+Variable.uGlobal.uloadFile.Declare("loadFile")
+
+Variable.UDT.InvMstr.Define("Part",String,Part)
+Variable.UDT.InvMstr.Define("onHand",Float,onHand)
+Variable.UDT.InvMstr.Define("Qty_OnOrder_WO",Float,Qty_OnOrder_WO)
+Variable.UDT.InvMstr.Define("Code_Sort",String,Code_Sort)
+Variable.uGlobal.uInvMstr.Declare("InvMstr")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+
+F.ODBC.Connection!Con.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+
+V.Local.sMsg.Declare(String)
+V.Local.bHere.Declare(Boolean)
+
+F.Automation.MSExcel.CheckPresence(V.Local.bHere)
+F.Intrinsic.Control.If(V.Local.bHere,=,False)
+	F.Intrinsic.String.Concat("This program requires the use of Excel.",V.Ambient.NewLine,"Excel was not found on this machine.",V.Local.sMsg)
+	F.Intrinsic.UI.Msgbox(V.Local.sMsg)
+	F.Intrinsic.Control.CallSub(Unload)
+F.Intrinsic.Control.EndIf
+
+
+
+F.Intrinsic.Control.CallSub(Fileselect)
+F.Intrinsic.Control.CallSub(Readxls,"FILE",V.Args.FILE)
+F.Intrinsic.Control.CallSub(Evaldata)
+F.Intrinsic.Control.CallSub(Writexls,"FILE",V.Args.FILE)
+F.Intrinsic.Control.CallSub(Unload)
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+
+F.ODBC.Connection!Con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+Program.Sub.fileSelect.Start
+
+V.Local.sRet.Declare(String)
+
+' select  file to load
+F.Intrinsic.UI.ShowOpenFileDialog("","xls|*.xls","",V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,=,"***CANCEL***")
+	F.Intrinsic.Control.CallSub(Unload)
+F.Intrinsic.Control.EndIf
+
+
+F.Intrinsic.Variable.AddRV("FILE",V.Local.sret)
+
+Program.Sub.fileSelect.End
+
+Program.Sub.readXLS.Start
+
+V.Local.sRet.Declare(String)
+
+' read spreadsheet
+F.Automation.MSExcel.ReadSpreadsheet(V.Args.FILE,V.Local.sRet)
+F.Intrinsic.String.Split(V.Local.sret,"&^&",V.Local.sRet)
+
+
+' load data to udt for easy handling
+F.Intrinsic.Variable.LoadUDTFromString(V.uGlobal.uloadFile,"SNo*!*Part*!*PO*!*POType*!*Branch*!*LT*!*Received*!*SNR*!*NeedQty*!*NeedDate*!*PromiseToNeed*!*CommQty*!*CommDate*!*ReasonCode*!*Comment*!*LastUpdate*!*LineNo",V.Local.sRet(0),"$!$","*!*",False,1000)
+
+
+Program.Sub.readXLS.End
+
+Program.Sub.evalData.Start
+
+V.Local.iFor.Declare(Long)
+V.Local.sRet.Declare(String)
+V.Local.sVal.Declare(String)
+V.Local.fVal.Declare(Float)
+V.Local.fQtyWO.Declare(Float)
+
+V.uGlobal.uinvMstr.Redim(-1,-1)
+' 01/13/2014 - per Martha, use On Hand, only
+'F.ODBC.Connection!Con.OpenRecordsetRO("rstSel","select Part, (Qty_OnHand + Qty_Onorder_Wo - Qty_Required) as onHand, Qty_OnOrder_WO from Inventory_Mstr order by Part")
+' quote 6783 change to add sort code
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel","select Part, Qty_OnHand as onHand, Qty_OnOrder_WO, Code_Sort from Inventory_Mstr order by Part")
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","V.uGlobal.uinvMstr",False,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+
+F.Intrinsic.Control.For(V.Local.iFor,V.uGlobal.uloadFile!Part.LBound,V.uGlobal.uloadFile!Part.UBound,1)
+	F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uinvMstr!Part,V.uGlobal.uloadFile(v.Local.iFor)!Part,V.Local.sRet)
+
+	' make sure it found the part
+	F.Intrinsic.Control.If(V.Local.sRet,<>,"")
+
+		' should only be a single return, but split just in case
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+
+		' add sort code to output data
+		V.uGlobal.uloadFile(v.Local.iFor)!Sort.set(V.uGlobal.uInvMstr(v.Local.sRet.Long)!Code_Sort)
+
+
+		' 1. see if onhand satisfies the requirement.
+		F.Intrinsic.Control.If(V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,>=,V.uGlobal.uloadFile(v.Local.iFor)!needQty)
+
+			' write onhand to the IP element
+			F.Intrinsic.String.Concat("FG= ",V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,V.Local.sVal)
+			V.uGlobal.uloadFile(v.Local.iFor)!IP.Set(V.Local.sVal)
+
+			' write the qty on workorder to the WO element
+			F.Intrinsic.String.Concat("IP= ",V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.sVal)
+			V.uGlobal.uloadFile(v.Local.iFor)!WO.Set(V.Local.sVal)
+
+			' subtract requirement from onhand for next element
+			F.Intrinsic.Math.Sub(V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,V.uGlobal.uloadFile(v.Local.iFor)!needQty,V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand)
+
+		' 2. if onhand is not enough to satisfy the need qty
+		F.Intrinsic.Control.Else
+
+			' 2a) if the available qty is above 0, write it to the IP element
+			F.Intrinsic.Control.If(V.uGlobal.uInvMstr(v.Local.sRet(0))!onHand,>,0)
+				F.Intrinsic.String.Concat("FG= ",V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,V.Local.sVal)
+				V.uGlobal.uloadFile(v.Local.iFor)!IP.Set(V.Local.sVal)
+
+				F.Intrinsic.Math.Sub(V.uGlobal.uloadFile(v.Local.iFor)!needQty,V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,V.Local.fVal)
+				F.Intrinsic.Control.If(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,>,V.Local.fVal)
+					F.Intrinsic.String.Concat("IP= ",V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.sVal)
+					V.uGlobal.uloadFile(v.Local.iFor)!WO.Set(V.Local.sVal)
+					F.Intrinsic.Math.sub(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.fVal,V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO)
+				F.Intrinsic.Control.Else
+					F.Intrinsic.Math.sub(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.fVal,V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO)
+					F.Intrinsic.Math.Abs(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.fVal)
+					F.Intrinsic.String.Concat("NEED= ",V.Local.fVal,V.Local.sVal)
+					V.uGlobal.uloadFile(v.Local.iFor)!WO.Set(V.Local.sVal)
+				F.Intrinsic.Control.EndIf
+
+			'get difference between onhand and need
+			' 2b) if the available qty is 0 then see if there is enough on wo
+			F.Intrinsic.Control.Else
+
+				'get difference between onhand and need
+				F.Intrinsic.Control.If(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,>=,V.uGlobal.uloadFile(v.Local.iFor)!needQty)
+					F.Intrinsic.String.Concat("IP= ",V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.sVal)
+					V.uGlobal.uloadFile(v.Local.iFor)!WO.Set(V.Local.sVal)
+					F.Intrinsic.Math.sub(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.uGlobal.uloadFile(v.Local.iFor)!needQty,V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO)
+
+				' 2d) if wo qty cannot satisfy the need qty, subtract the difference; write the available to the wo qty then start adding the underage to the need qty
+				F.Intrinsic.Control.Else
+					F.Intrinsic.Math.sub(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.uGlobal.uloadFile(v.Local.iFor)!needQty,V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO)
+					F.Intrinsic.Math.Abs(V.uGlobal.uInvMstr(v.Local.sRet(0))!Qty_OnOrder_WO,V.Local.fVal)
+					F.Intrinsic.String.Concat("NEED= ",V.Local.fVal,V.Local.sVal)
+					V.uGlobal.uloadFile(v.Local.iFor)!WO.Set(V.Local.sVal)
+				F.Intrinsic.Control.EndIf
+			F.Intrinsic.Control.EndIf
+
+			' set onhand to 0
+			V.uGlobal.uInvMstr(v.Local.sRet(0))!onHand.Set(0)
+		F.Intrinsic.Control.EndIf
+		
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+Program.Sub.evalData.End
+
+Program.Sub.writeXLS.Start
+
+V.Local.sFile.Declare(String)
+V.Local.sData.Declare(String)
+V.Local.bExists.Declare(Boolean)
+V.Local.sLine.Declare(String)
+V.Local.iHndl.Declare(Long)
+
+Function.Intrinsic.Variable.UDTToString(v.uGlobal.uloadFile,"SNo*!*Part*!*PO*!*POType*!*Branch*!*LT*!*Received*!*SNR*!*NeedQty*!*NeedDate*!*PromiseToNeed*!*CommQty*!*CommDate*!*ReasonCode*!*Comment*!*LastUpdate*!*LineNo*!*IP*!*WO*!*Sort","$!$","*!*",V.Local.sData)
+
+' need to reset the field headings for the numeric and date field values that are now 0 or 01/01/1900
+F.Intrinsic.String.Split(V.Local.sData,"$!$",V.Local.sLine)
+V.Local.sLine(0).Set("Part SNo*!*Part Number*!*PO Number*!*PO Type*!*Branch*!*LT*!*Received*!*SNR*!*Need Qty*!*Need Date*!*Promise To Need*!*CommQty*!*Comm Date*!*Reason Code*!*Comments*!*Last Update*!*Line No*!*FG/WO*!*IP/Need*!*Sort Code")
+F.Intrinsic.String.Join(V.Local.sLine,"$!$",V.Local.sData)
+
+F.Intrinsic.File.Exists(V.Args.FILE,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists,=,True)
+	F.Intrinsic.File.DeleteFile(V.Args.FILE)
+F.Intrinsic.Control.EndIf
+
+F.Automation.MSExcel.WriteSpreadsheet(V.Args.FILE,V.Local.sData)
+F.Intrinsic.Task.ShellExec(V.Local.iHndl,"OPEN",V.Args.FILE,"","",1)
+
+Program.Sub.writeXLS.End
+
+
