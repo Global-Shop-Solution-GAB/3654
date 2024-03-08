@@ -1,0 +1,725 @@
+Program.Sub.ScreenSU.Start
+gui.SS_Form1..create
+gui.SS_Form1..caption("GCG Forecast Import")
+gui.SS_Form1..size(2665,2510)
+gui.SS_Form1..position(0,0)
+gui.SS_Form1..event(unload,unload)
+gui.SS_Form1..alwaysontop(False)
+gui.SS_Form1..fontname("Arial")
+gui.SS_Form1..fontsize(8)
+gui.SS_Form1..forecolor(0)
+gui.SS_Form1..fontstyle(,,,,)
+gui.SS_Form1..BackColor(-2147483633)
+gui.SS_Form1..controlbox(True)
+gui.SS_Form1..maxbutton(False)
+gui.SS_Form1..minbutton(False)
+gui.SS_Form1..mousepointer(0)
+gui.SS_Form1..moveable(True)
+gui.SS_Form1..sizeable(False)
+gui.SS_Form1..ShowInTaskBar(True)
+gui.SS_Form1..titlebar(True)
+gui.SS_Form1.lbl_txtCust.create(label,"Customer",True,1800,200,1,100,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtCust.create(textbox,"",True,1800,330,1,100,335,True,0,Arial,8,16777215,1)
+gui.SS_Form1.cmd_txtCust.create(button)
+gui.SS_Form1.cmd_txtCust.caption("^")
+gui.SS_Form1.cmd_txtCust.visible(True)
+gui.SS_Form1.cmd_txtCust.size(330,330)
+gui.SS_Form1.cmd_txtCust.zorder(0)
+gui.SS_Form1.cmd_txtCust.position(1985,335)
+gui.SS_Form1.cmd_txtCust.enabled(True)
+gui.SS_Form1.cmd_txtCust.fontname("Arial")
+gui.SS_Form1.cmd_txtCust.fontsize(8)
+gui.SS_Form1.cmd_txtCust.event(click,cmd_txtcust_click)
+gui.SS_Form1.lbl_txtFile.create(label,"Forecast File",True,1800,200,1,100,835,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtFile.create(textbox,"",True,1800,330,1,100,1035,True,0,Arial,8,16777215,1)
+gui.SS_Form1.cmd_txtFile.create(button)
+gui.SS_Form1.cmd_txtFile.caption("^")
+gui.SS_Form1.cmd_txtFile.visible(True)
+gui.SS_Form1.cmd_txtFile.size(330,330)
+gui.SS_Form1.cmd_txtFile.zorder(0)
+gui.SS_Form1.cmd_txtFile.position(1985,1035)
+gui.SS_Form1.cmd_txtFile.enabled(True)
+gui.SS_Form1.cmd_txtFile.fontname("Arial")
+gui.SS_Form1.cmd_txtFile.fontsize(8)
+gui.SS_Form1.cmd_txtFile.event(click,cmd_txtfile_click)
+gui.SS_Form1.cmdImport.create(button)
+gui.SS_Form1.cmdImport.caption("Import")
+gui.SS_Form1.cmdImport.visible(True)
+gui.SS_Form1.cmdImport.size(1000,360)
+gui.SS_Form1.cmdImport.zorder(0)
+gui.SS_Form1.cmdImport.position(100,1535)
+gui.SS_Form1.cmdImport.enabled(True)
+gui.SS_Form1.cmdImport.fontname("Arial")
+gui.SS_Form1.cmdImport.fontsize(8)
+gui.SS_Form1.cmdImport.event(click,cmdimport_click)
+gui.SS_Form1.txtCust.tabstop(true)
+gui.SS_Form1.txtCust.tabindex(1)
+gui.SS_Form1.cmd_txtCust.tabstop(true)
+gui.SS_Form1.cmd_txtCust.tabindex(2)
+gui.SS_Form1.txtFile.tabstop(true)
+gui.SS_Form1.txtFile.tabindex(3)
+gui.SS_Form1.cmd_txtFile.tabstop(true)
+gui.SS_Form1.cmd_txtFile.tabindex(4)
+gui.SS_Form1.cmdImport.tabstop(true)
+gui.SS_Form1.cmdImport.tabindex(5)
+
+
+gui.Form2..create
+gui.Form2..caption("")
+gui.Form2..size(2745,1635)
+gui.Form2..position(0,0)
+gui.Form2..alwaysontop(False)
+gui.Form2..fontname("Arial")
+gui.Form2..fontsize(8)
+gui.Form2..forecolor(0)
+gui.Form2..fontstyle(,,,,)
+gui.Form2..BackColor(-2147483633)
+gui.Form2..controlbox(True)
+gui.Form2..maxbutton(True)
+gui.Form2..minbutton(True)
+gui.Form2..mousepointer(0)
+gui.Form2..moveable(True)
+gui.Form2..sizeable(True)
+gui.Form2..ShowInTaskBar(True)
+gui.Form2..titlebar(True)
+gui.Form2.lbl1.create(label,"Reading Import File",True,2085,300,1,200,200,True,2,Arial,10,-2147483633,0)
+gui.Form2.lbl1.fontstyle(True,False,False,False)
+gui.Form2.lbl2.create(label,"",True,2085,300,1,200,695,True,2,Arial,10,-2147483633,0)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.UDT.loadFile.Define("Part",String)
+Variable.UDT.loadFile.Define("Branch",String)
+Variable.UDT.loadFile.Define("Qty",Long)
+Variable.UDT.loadFile.Define("orderNo",String)
+Variable.UDT.loadFile.Define("orderType",String)
+Variable.UDT.loadFile.Define("Line",String)
+Variable.UDT.loadFile.Define("orderClass",String)
+Variable.UDT.loadFile.Define("Replen",String)
+Variable.UDT.loadFile.Define("UID",String)
+Variable.UDT.loadFile.Define("CF",String)
+Variable.UDT.loadFile.Define("shipTo",String)
+Variable.UDT.loadFile.Define("Name",String)
+Variable.UDT.loadFile.Define("Add1",String)
+Variable.UDT.loadFile.Define("Add2",String)
+Variable.UDT.loadFile.Define("Add3",String)
+Variable.UDT.loadFile.Define("Add4",String)
+Variable.UDT.loadFile.Define("City",String)
+Variable.UDT.loadFile.Define("State",String)
+Variable.UDT.loadFile.Define("Country",String)
+Variable.UDT.loadFile.Define("Zip",String)
+Variable.UDT.loadFile.Define("Date",Date,"","M/D/YYYY")
+Variable.uGlobal.uloadFile.Declare("loadFile")
+
+Variable.UDT.filecopy.Define("Part",String)
+Variable.UDT.filecopy.Define("Branch",String)
+Variable.UDT.filecopy.Define("Qty",Long)
+Variable.UDT.filecopy.Define("orderNo",String)
+Variable.UDT.filecopy.Define("orderType",String)
+Variable.UDT.filecopy.Define("Line",String)
+Variable.UDT.filecopy.Define("orderClass",String)
+Variable.UDT.filecopy.Define("Replen",String)
+Variable.UDT.filecopy.Define("UID",String)
+Variable.UDT.filecopy.Define("CF",String)
+Variable.UDT.filecopy.Define("shipTo",String)
+Variable.UDT.filecopy.Define("Name",String)
+Variable.UDT.filecopy.Define("Add1",String)
+Variable.UDT.filecopy.Define("Add2",String)
+Variable.UDT.filecopy.Define("Add3",String)
+Variable.UDT.filecopy.Define("Add4",String)
+Variable.UDT.filecopy.Define("City",String)
+Variable.UDT.filecopy.Define("State",String)
+Variable.UDT.filecopy.Define("Country",String)
+Variable.UDT.filecopy.Define("Zip",String)
+Variable.UDT.filecopy.Define("Date",String)
+Variable.uGlobal.ufilecopy.Declare("filecopy")
+
+Variable.UDT.invMstr.Define("Part",String,Part)
+Variable.UDT.invMstr.Define("onHand",Float,onHand)
+Variable.uGlobal.uinvMstr.Declare("invMstr")
+Variable.Global.sExceptTxt.Declare(String)
+Variable.UDT.uDates.Define("Due_Date",String)
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+F.ODBC.Connection!Con.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+V.Local.sMsg.Declare(String)
+V.Local.bHere.Declare(Boolean)
+
+'
+'
+
+'Qte 7560 no longer requires use of excel. States that it's a CSV file.
+'F.Automation.MSExcel.CheckPresence(V.Local.bHere)
+'F.Intrinsic.Control.If(V.Local.bHere,=,False)
+'	F.Intrinsic.String.Concat("This program requires the use of Excel.",V.Ambient.NewLine,"Excel was not found on this machine.",V.Local.sMsg)
+'	F.Intrinsic.UI.Msgbox(V.Local.sMsg)
+'	F.Intrinsic.Control.CallSub(Unload)
+'F.Intrinsic.Control.EndIf
+
+Gui.SS_Form1..Show
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3654_Forecast_Import.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+
+F.ODBC.Connection!Con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+Program.Sub.evalData.Start
+
+V.Local.iFor.Declare(Long)
+V.Local.sRet.Declare(String)
+
+
+
+
+V.uGlobal.uinvMstr.Redim(-1,-1)
+F.ODBC.Connection!Con.OpenRecordsetRO("rstSel","select Part, (Qty_OnHand + Qty_Onorder_Wo - Qty_Required) as onHand from Inventory_Mstr order by Part")
+	F.Intrinsic.Control.If(V.ODBC.Con!rstSel.EOF,=,False)
+		F.Intrinsic.Variable.LoadUDTFromRecordset("Con","rstSel","V.uGlobal.uinvMstr",False,1)
+	F.Intrinsic.Control.EndIf
+F.ODBC.Con!rstSel.Close
+
+F.Intrinsic.Control.For(V.Local.iFor,V.uGlobal.uloadFile!Part.LBound,V.uGlobal.uloadFile!Part.UBound,1)
+
+	' get the current running "on hand"
+	F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uinvMstr!Part,V.uGlobal.uloadFile(v.Local.iFor)!Part,V.Local.sRet)
+
+	' make sure it found the part
+	F.Intrinsic.Control.If(V.Local.sRet,<>,"")
+
+		' should only be a single return, but split just in case
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		
+		'see if onhand satisfies the requirement.  if it does, flag the record for deletion so an order line won't be created for it
+		F.Intrinsic.Control.If(V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,>=,V.uGlobal.uloadFile(v.Local.iFor)!Qty)
+			F.Intrinsic.Variable.UDTFlagOrdinal(V.uGlobal.uloadFile,True,V.Local.iFor)
+
+			' subtract requirement from onhand
+			F.Intrinsic.Math.Sub(V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,V.uGlobal.uloadFile(v.Local.iFor)!Qty,V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand)
+
+		' else just set the onhand to 0 so all future checks will fail and lines will be created for them
+		F.Intrinsic.Control.Else
+
+			' subtract requirement from onhand
+'			F.Intrinsic.Math.Sub(V.uGlobal.uloadFile(v.Local.iFor)!Qty,V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand,V.uGlobal.uloadFile(v.Local.iFor)!Qty)
+
+			' on the first underage, the onhand will be set to 0, and saty 0 after that
+			V.uGlobal.uinvMstr(v.Local.sRet(0))!onHand.Set(0)
+		F.Intrinsic.Control.EndIf
+
+		
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uloadFile)
+
+Program.Sub.evalData.End
+
+Program.Sub.loadData.Start
+F.Intrinsic.Control.SetErrorHandler("loadData_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sFile.Declare(String)
+V.Local.sString.Declare(String)
+V.Local.iFor.Declare(Long)
+V.Local.iForb.Declare(Long)
+V.Local.sRet.Declare(String)
+V.Local.sDate.Declare(String)
+V.Local.sHead.Declare(String)
+V.Local.sDetail.Declare(String)
+V.Local.iQty.Declare(Long)
+V.Local.smsg.Declare(String)
+V.Local.iLine.Declare(Long)
+V.Local.iLineCt.Declare(Long)
+V.Local.sExceptFile.Declare(String)
+
+
+' if there were exceptions, write them to the log file
+F.Intrinsic.Control.If(V.Global.sExceptTxt.Trim,<>,"")
+	F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Invalid Forecast Routers.txt",V.Local.sExceptFile)
+	F.Intrinsic.File.String2File(V.Local.sExceptFile,V.Global.sExceptTxt)
+F.Intrinsic.Control.endif
+
+ ' see if any values remain in the load udt; nothing to do if it's empty
+F.Intrinsic.Control.If(V.uGlobal.uloadFile!Part.UBound,=,-1)
+	F.Intrinsic.Control.If(V.Global.sExceptTxt.Trim,<>,"")
+		F.Intrinsic.Variable.AddRV("FILE",V.Local.sExceptFile)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.Else
+		'no errors and no data to process bye
+		F.Intrinsic.Control.CallSub(Unload)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Concat(V.Caller.FilesDir,"\UPLFCST.txt",V.Local.sFile)
+F.Intrinsic.String.Format(V.Ambient.Date,"MM/DD/YYYY",V.Local.sDate)
+
+ ' create empty txt
+F.Intrinsic.File.String2File(V.Local.sFile,"")
+
+' create a copy, to be able to eliminate duplicates
+F.Intrinsic.Variable.UDTCopy(V.uGlobal.uloadFile,V.uGlobal.ufilecopy,False)
+
+' don't need blank po lines in the copy
+'TRT for new quote, cause they don't have PO lines anymore
+'F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.ufilecopy!orderNo,"")
+'F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.ufilecopy)
+
+' make sure it's sorted correcty;  flag and delete duplicates
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.ufilecopy!Part,False)
+F.Intrinsic.Variable.UDTMultiFlagDuplicates(V.uGlobal.ufilecopy!Part)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.ufilecopy)
+
+' for all records left, create a records on the upload file
+'H~CUST~SHIP-TO~PART~REV~LOC~CUST PART~DESC~START DATE(MM/DD/YYYY)~INV SOURCE~DOC #~QUANTITY~GEN DETAIL?~# OF BUCKETS~INTERVAL DAYS~DAYS TO CONSUME~2ND DAYS~3RD DAYS~USER-1~USER-2~COMMENT~IMPORT SOURCE
+'L~REQD DATE(MM/DD/YYYY)~QUANTITY~TYPE
+Gui.Form2.lbl1.Caption("Writing Upload Data")
+F.Intrinsic.Control.For(V.Local.iFor,0,V.uGlobal.ufilecopy.UBound,1)
+
+V.Local.iQty.Set(0)
+	
+	' these should clear themselves each pass, but just in case, they are cleared here.
+	V.Local.sHead.Set("")
+	V.Local.sDetail.Set("")
+	F.Intrinsic.String.Format(V.Ambient.Date,"MM/DD/YYYY",V.Local.sDate)
+
+	' one header line for part/orderno
+	F.Intrinsic.String.Concat("H",V.Ambient.Tab,V.Screen.SS_Form1!txtCust.Text,V.Ambient.Tab,V.Screen.SS_Form1!txtCust.Text,V.Ambient.Tab,V.uGlobal.ufilecopy(v.Local.iFor)!Part,V.Ambient.Tab,"",V.Ambient.Tab,"",V.Ambient.Tab,V.uGlobal.ufilecopy(v.Local.iFor)!Part,V.Local.sHead)
+	F.Intrinsic.String.Concat(V.Local.sHead,V.Ambient.Tab,"",V.Ambient.Tab,V.Local.sDate,V.Ambient.Tab,"",V.Ambient.Tab,V.uGlobal.ufilecopy(v.Local.iFor)!orderNo,V.Ambient.Tab,"#QTY#",V.Ambient.Tab,"N",V.Ambient.Tab,0,V.Ambient.Tab,0,V.Ambient.Tab,V.Local.sHead)
+	F.Intrinsic.String.Concat(V.Local.sHead,0,V.Ambient.Tab,0,V.Ambient.Tab,0,V.Ambient.Tab,"",V.Ambient.Tab,"",V.Ambient.Tab,"",V.Ambient.Tab,"I",V.Local.sHead)
+
+	'detail line for each date
+	F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uloadFile!Part,V.uGlobal.ufilecopy(v.Local.iFor)!Part,V.Local.sRet)
+
+	' check for null retuirn
+	F.Intrinsic.Control.If(V.Local.sRet.trim,<>,"")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		F.Intrinsic.Control.For(V.Local.iForb,V.Local.sRet.LBound,V.Local.sRet.UBound,1)
+			F.Intrinsic.Math.Add(V.Local.iLineCt,1,V.Local.iLineCt)
+			F.Intrinsic.Math.Add(V.Local.iLine,1,V.Local.iLine)
+			F.Intrinsic.String.Concat("Line:  ",V.Local.iLine,V.Local.smsg)
+			Gui.Form2.lbl2.Caption(V.Local.smsg)
+			F.Intrinsic.String.Format(V.uGlobal.uloadFile(v.Local.sRet(v.Local.iForb))!Date,"MM/DD/YYYY",V.Local.sDate)
+			F.Intrinsic.String.Concat(V.Local.sDetail,V.Ambient.NewLine,"L",V.Ambient.Tab,V.Local.sDate,V.Ambient.Tab,V.uGlobal.uloadFile(v.Local.sRet(v.Local.iForb))!Qty,V.Ambient.Tab,"1",V.Local.sDetail)
+			F.Intrinsic.Math.Add(V.Local.iQty,V.uGlobal.uloadFile(v.Local.sRet(v.Local.iForb))!Qty,V.Local.iQty)
+		F.Intrinsic.Control.Next(V.Local.iForb)
+
+		' write the total qty to header
+		F.Intrinsic.String.Replace(V.Local.sHead,"#QTY#",V.Local.iQty,V.Local.sHead)
+
+		' write the header and lines to the text
+		F.Intrinsic.Control.If(V.Local.sString.Trim,=,"")
+			F.Intrinsic.String.Concat(V.Local.sString,V.Local.sHead,V.Local.sDetail,V.Local.sString)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat(V.Local.sString,V.Ambient.NewLine,V.Local.sHead,V.Local.sDetail,V.Local.sString)
+		F.Intrinsic.Control.EndIf
+
+		' need to see if string is too large; save and set, if over 1000 lines
+		F.Intrinsic.Control.If(V.Local.iLineCt,>,1000)
+			' be sure the text will append to a new line
+			F.Intrinsic.String.Build("{0}{1}",V.Ambient.NewLine,V.Local.sString,V.Local.sString)
+			F.Intrinsic.File.Append2File(V.Local.sFile,V.Local.sString)
+			V.Local.sString.Set("")
+			V.Local.iLineCt.Set(0)
+
+'			F.Intrinsic.Control.ExitFor(V.Local.iFor)
+
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Next(V.Local.iFor)
+
+F.Intrinsic.Control.if(V.Local.sString.Trim,<>,"")
+	F.Intrinsic.File.Append2File(V.Local.sFile,V.Local.sString)
+F.Intrinsic.Control.EndIf
+
+
+
+
+
+
+'F.Intrinsic.Debug.CallWrapperDebugEnable
+F.Global.General.CallWrapperAsync(50,"FC0005")
+
+F.Intrinsic.Variable.AddRV("FILE",V.Local.sExceptFile)
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("loadData_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_Forecast_Import.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription," line: ",V.Local.iLineCt,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+
+Program.Sub.loadData.End
+
+program.sub.cmd_txtcust_click.start
+F.Intrinsic.Control.SetErrorHandler("cmd_txtcust_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.CommonBrowser(205,"",V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,=,"***CANCEL***")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+Gui.SS_Form1.txtCust.Text(V.Local.sRet(0))
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmd_txtcust_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3654_Forecast_Import.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmd_txtcust_click.end
+
+program.sub.cmd_txtfile_click.start
+
+
+V.Local.sRet.Declare(String)
+
+' select  file to load
+F.Intrinsic.UI.ShowOpenFileDialog("","csv|*.csv","",V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,=,"***CANCEL***")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+Gui.SS_Form1.txtFile.Text(V.Local.sRet)
+
+
+
+program.sub.cmd_txtfile_click.end
+
+program.sub.cmdimport_click.start
+
+
+Gui.SS_Form1..Visible(false)
+Gui.Form2..Show
+
+V.Local.sret.Declare(String)
+V.Local.iHndl.Declare(Long)
+V.Local.sDueDate.Declare(String)
+V.Local.bEx.Declare(Boolean)
+V.Local.iR.Declare(Long)
+V.Local.iUB.Declare(Long)
+V.Local.sRow.Declare(String)
+V.Local.sT.Declare(String)
+V.Local.iC.Declare(Long)
+V.uGlobal.uloadFile.Redim(-1,-1)
+
+' read spreadsheet
+'F.Automation.MSExcel.ReadSpreadsheet(V.Screen.SS_Form1!txtFile.Text,V.Local.sRet)
+'no longer a spreadsheet its a CSV file
+F.Intrinsic.File.File2String(V.Screen.SS_Form1!txtFile.Text,V.Local.sRet)
+
+
+'
+
+
+F.Intrinsic.String.Split(V.Local.sret,V.Ambient.NewLine,V.Local.sRet)
+
+
+
+'Line 2 starting at column P will be our due dates.
+'Split this value out and that will be our due date array values.
+'due date starts at array 15 element
+F.Intrinsic.String.Split(V.Local.sret(1),",",V.Local.sDueDate)
+
+'the first due date should be a range, ahve to split it on '-' and then take the first date from there.
+F.Intrinsic.String.IsInString(V.Local.sDueDate(15),"-",True,V.Local.bEx)
+F.Intrinsic.Control.If(V.Local.bEx,=,True)
+	F.Intrinsic.String.Split(V.Local.sDueDate(15),"-",V.Local.sT)
+	V.Local.sDueDate(15).Set(V.Local.sT(0))
+F.Intrinsic.Control.EndIf
+
+
+
+'now read the parts, loading into the UDT 1 by 1 as original, but using every due date column as a new record within the UDT
+F.Intrinsic.Control.For(V.Local.iR,2,V.Local.sret.UBound,1)
+	'for each due date value
+	F.Intrinsic.Control.If(V.Local.sRet(v.Local.iR).Trim,<>,"")
+		F.Intrinsic.String.Split(V.Local.sret(v.Local.iR),",",V.Local.sRow)
+
+		F.Intrinsic.Control.For(V.Local.iC,15,V.Local.sDueDate.UBound,1)
+			'make sure qty is greater than zero or not blank
+			F.Intrinsic.Control.If(V.Local.sRow(v.Local.iC),>,0,"AND",V.Local.sRow(v.Local.iC),<>,"")
+				F.Intrinsic.Control.If(V.uGlobal.uloadFile.UBound,=,-1)
+					V.uGlobal.uloadFile.Redim(0,0)
+					V.Local.iUB.Set(0)
+				F.Intrinsic.Control.Else
+					F.Intrinsic.Math.Add(V.uGlobal.uloadFile.UBound,1,V.Local.iUB)
+					V.uGlobal.uloadFile.RedimPreserve(0,V.Local.iUB)
+				F.Intrinsic.Control.EndIf
+				'Part
+				V.uGlobal.uloadFile(v.Local.iUB)!Part.Set(V.Local.sRow(0))
+				'cust location
+				V.uGlobal.uloadFile(v.Local.iUB)!Branch.Set(V.Local.sRow(1))
+				'Date due from duedate(v.local.ic)
+				V.uGlobal.uloadFile(v.Local.iUB)!Date.Set(V.Local.sDueDate(v.Local.iC))
+				'qty
+				V.uGlobal.uloadFile(v.Local.iUB)!Qty.Set(V.Local.sRow(v.Local.iC))
+			F.Intrinsic.Control.EndIf
+				
+		F.Intrinsic.Control.Next(V.Local.iC)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iR)
+
+
+
+'
+
+
+' load data to udt for easy handling
+'F.Intrinsic.Variable.LoadUDTFromString(V.uGlobal.uloadFile,"Part*!*Branch*!*Date*!*Qty*!*orderNo*!*orderType*!*Line*!*orderClass*!*Replen*!*UID*!*CF*!*shipTo*!*Name*!*Add1*!*Add2*!*Add3*!*Add4*!*City*!*State*!*Country*!*Zip",V.Local.sRet(0),"$!$","*!*",False,1000)
+
+'F.Intrinsic.Control.CallSub(Evaldata)
+F.Intrinsic.Control.CallSub(Createordblocks)
+
+
+
+F.Intrinsic.Control.CallSub(Loaddata)
+
+F.Intrinsic.Control.If(V.Global.sExceptTxt.Trim,<>,"")
+	F.Intrinsic.UI.Msgbox("Unable to find Routers for all parts.  Please review log.")
+	F.Intrinsic.File.GetHandle(V.Local.iHndl)
+	F.Intrinsic.Task.ShellExec(V.Local.iHndl,"OPEN",V.args.FILE,"","",1)
+F.Intrinsic.Control.EndIf
+
+
+F.Intrinsic.Control.CallSub(Unload)
+
+
+program.sub.cmdimport_click.end
+
+Program.Sub.createOrdBlocks.Start
+
+V.Local.iForRet.Declare(Long)
+V.Local.fOrdQty.Declare(Float)
+V.Local.sSel.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.iFor.Declare(Long)
+V.Local.fQty.Declare(Float)
+V.Local.iRem.Declare(Long)
+V.Local.fRem.Declare(Float)
+V.Local.fRunTot.Declare(Float)
+V.Local.iTmp.Declare(Long)
+V.Local.iEarliest.Declare(Long)
+V.Local.iMonth.Declare(Long)
+V.Local.iCurMonth.Declare(Long)
+
+
+' need to create blocks of qty.  They could get hundreds of lines, and wos will be created for each. sum the qty to create single line(s) with a qty equal to the inventory order qty.
+V.uGlobal.uFileCopy.Redim(-1,-1)
+
+' don't need header
+F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uloadFile!Part,"LIKE::*Part Number*")
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uloadFile)
+
+'get copy of udt that has unique part numbers
+F.Intrinsic.Variable.UDTCopy(V.uGlobal.uLoadFile,V.uGlobal.uFileCopy,False)
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uFileCopy!Part,False)
+F.Intrinsic.Variable.UDTMultiFlagDuplicates(V.uGlobal.uFileCopy!Part)
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uFileCopy)
+
+
+'go through and validate that the part is actually a router go through our dupe removed one filecopy
+F.Intrinsic.Control.For(V.Local.iFor,0,V.uGlobal.ufilecopy.UBound,1)
+	F.Intrinsic.Control.CallSub(Verifyrouter,"PART",V.uGlobal.uFileCopy(v.local.iFor)!Part)
+	F.Intrinsic.Control.If(V.Args.VALID,=,"N")
+		'flag all those in our udt loadfile cause they shouldn't be worried about cause they are not valid routers
+		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uloadFile!Part,V.uGlobal.ufilecopy(v.Local.iFor)!Part)
+	F.Intrinsic.Control.endif
+F.Intrinsic.Control.Next(V.Local.iFor)
+' sort loadfile by part and date
+'F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uloadFile!Part,False,V.uGlobal.uloadFile!Date,False)
+
+'F.Intrinsic.Control.CallSub(Verifyrouter)
+ ' see if any value remain in the load udt; nothing to do if it's empty
+'F.Intrinsic.Control.If(V.uGlobal.uloadFile!Part.UBound,=,-1)
+'	F.Intrinsic.Control.GoTo("EXIT")
+'F.Intrinsic.Control.EndIf
+'flag all within the ufilecopy
+'F.Intrinsic.Variable.UDTFlagAll(V.uGlobal.ufilecopy)
+'
+'F.Intrinsic.Control.For(V.Local.iFor,V.uGlobal.uFileCopy!Part.LBound,V.uGlobal.uFileCopy!Part.UBound,1)
+'	F.Intrinsic.Control.CallSub(Verifyrouter,"PART",V.uGlobal.uFileCopy(v.local.iFor)!Part)
+''	F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uLoadFile!Part,V.uGlobal.uFileCopy(v.Local.iFor)!Part)
+'
+'	' 12/8/2013 -- jct --
+'	' per Martha, group incoming order by month
+'	'	F.Intrinsic.String.Concat("select Qty_order from Inventory_Mstr where Part ='",V.uGlobal.uFileCopy(v.Local.iFor)!Part,"' and Qty_Order>0",V.Local.sSel)
+'	'	f.ODBC.Connection!Con.ExecuteAndReturn(v.Local.sSel,v.Local.sRet)
+'	'	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+'	'	F.Intrinsic.Control.If(V.Local.sRet(0).Trim,<>,"")
+'	'		V.Local.fOrdQty.Set(V.Local.sRet(0))
+'	'	F.Intrinsic.Control.Else
+'	'		V.Local.fOrdQty.Set(50)
+'	'	F.Intrinsic.Control.EndIf
+'
+'	'	V.Local.fRem.Set(0)
+'	F.Intrinsic.Control.If(V.Args.VALID,=,"Y")
+'		'unflag said ordinal
+'		F.Intrinsic.Variable.UDTFlagOrdinal(V.uGlobal.ufilecopy,False,V.Local.iFor)
+'
+'		'V.Local.fQty.Set(0)
+''		F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uLoadFile!Part,V.uGlobal.uFileCopy(v.Local.iFor)!Part,V.Local.sRet)
+''			F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+''			F.Intrinsic.Control.For(V.Local.iForRet,V.Local.sRet.LBound,V.Local.sRet.UBound,1)
+''				F.Intrinsic.Date.Month(V.uGlobal.uloadFile(v.Local.sRet(v.Local.iForRet))!Date,V.Local.iMonth)
+''				F.Intrinsic.Control.If(V.Local.iMonth,<>,V.Local.iCurMonth)
+''					F.Intrinsic.Control.If(V.Local.iForRet,<>,0)
+''						V.uGlobal.uLoadFile(V.Local.iEarliest)!Qty.Set(V.Local.fQty)
+''					F.Intrinsic.Control.EndIf
+''					Function.Intrinsic.Variable.UDTFlagOrdinal(V.uGlobal.uLoadFile,False,V.Local.iEarliest)
+''					V.Local.iCurMonth.Set(V.Local.iMonth)
+''					V.Local.iEarliest.Set(V.Local.sRet(v.Local.iForRet))
+''					V.Local.fQty.Set(V.uGlobal.uloadFile(v.Local.sRet(v.Local.iForRet))!Qty)
+''				F.Intrinsic.Control.Else
+''					F.Intrinsic.Math.Add(V.Local.fQty,V.uGlobal.uloadFile(v.Local.sRet(v.Local.iForRet))!Qty,V.Local.fQty)
+''				F.Intrinsic.Control.EndIf
+''
+''				F.Intrinsic.Control.If(V.Local.iForRet,=,V.Local.sRet.UBound)
+''					F.Intrinsic.Control.If(V.Local.iForRet,<>,0)
+''						V.uGlobal.uLoadFile(V.Local.iEarliest)!Qty.Set(V.Local.fQty)
+''					F.Intrinsic.Control.EndIf
+''					Function.Intrinsic.Variable.UDTFlagOrdinal(V.uGlobal.uLoadFile,False,V.Local.iEarliest)
+''				F.Intrinsic.Control.EndIf
+''			F.Intrinsic.Control.Next(V.Local.iForRet)
+'	F.Intrinsic.Control.EndIf
+'F.Intrinsic.Control.Next(V.Local.iFor)
+'
+F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uLoadFile)
+
+
+
+F.Intrinsic.Control.Label("EXIT")
+'F.Intrinsic.Variable.AddRV("EXCEPT",V.Args.EXCEPT)
+'F.Intrinsic.Variable.AddRV("FILE",V.Args.FILE)
+
+F.Intrinsic.Control.ExitSub
+
+
+
+Program.Sub.createOrdBlocks.End
+
+Program.Sub.verifyRouter.Start
+
+V.Local.iFor.Declare(Long)
+V.Local.sSel.Declare(String)
+V.Local.sRet.Declare(String)
+'V.Local.sExceptFile.Declare(String)
+'V.Local.sExceptTxt.Declare(String)
+V.Local.bInstr.Declare(Boolean)
+V.Local.sValid.Declare(String,"Y")
+
+'F.Intrinsic.String.Concat(V.Caller.FilesDir,"\Invalid Forecast Routers.txt",V.Local.sExceptFile)
+
+
+'F.Intrinsic.Control.For(V.Local.iFor,V.uGlobal.ufilecopy!Part.LBound,V.uGlobal.ufilecopy!Part.UBound,1)
+'	F.Intrinsic.String.Concat("select Router from Router_Header where Router_Type='H' and Router ='",V.uGlobal.ufilecopy(v.Local.iFor)!Part,"'   ",V.Local.sSel)
+	F.Intrinsic.String.Concat("select Router from Router_Header where Router_Type='H' and Router ='",V.Args.PART,"'   ",V.Local.sSel)
+	F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSel,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet.Trim,=,"")
+		V.Local.sValid.Set("N")
+'		F.Intrinsic.Variable.UDTMultiFlag(V.uGlobal.uloadFile!Part,V.uGlobal.ufilecopy(v.Local.iFor)!Part)
+'		f.Intrinsic.Variable.UDTFlagOrdinal(v.uGlobal.ufilecopy,True,v.Local.iFor)
+'		F.Intrinsic.String.IsInString(V.Local.sExceptTxt,V.uGlobal.ufilecopy(v.Local.iFor)!Part,True,V.Local.bInstr)
+		F.Intrinsic.String.IsInString(V.Global.sExceptTxt,V.uGlobal.ufilecopy(v.Local.iFor)!Part,True,V.Local.bInstr)
+		F.Intrinsic.Control.If(V.Local.bInstr,=,False)
+'			F.Intrinsic.String.Concat(V.Local.sExceptTxt,V.uGlobal.ufilecopy(v.Local.iFor)!Part,V.Ambient.NewLine,V.Local.sExceptTxt)
+			F.Intrinsic.String.Concat(V.Global.sExceptTxt,V.Args.PART,V.Ambient.NewLine,V.Global.sExceptTxt)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+'F.Intrinsic.Control.Next(V.Local.iFor)
+'
+'F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.uloadFile)
+'F.Intrinsic.Variable.UDTDeleteFlagged(V.uGlobal.ufilecopy)
+F.Intrinsic.Variable.AddRV("VALID",V.Local.sValid)
+
+'F.Intrinsic.Control.If(V.Local.sExceptTxt.Trim,<>,"")
+'	F.Intrinsic.File.String2File(V.Local.sExceptFile,V.Local.sExceptTxt)
+'	F.Intrinsic.Variable.AddRV("EXCEPT","TRUE")
+'	F.Intrinsic.Variable.AddRV("FILE",V.Local.sExceptFile)
+'F.Intrinsic.Control.Else
+'	F.Intrinsic.Variable.AddRV("EXCEPT","FALSE")
+'	F.Intrinsic.Variable.AddRV("FILE",V.Local.sExceptFile)
+'F.Intrinsic.Control.EndIf
+
+Program.Sub.verifyRouter.End
+
+Program.Sub.ErrorsFiles.Start
+F.Intrinsic.Control.SetErrorHandler("ErrorsFiles_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.iHndl.Declare(Long)
+
+V.Local.sFile.Set(V.Args.File)
+
+F.Intrinsic.Control.If(V.Global.sExceptTxt.Trim,<>,"")
+	F.Intrinsic.UI.Msgbox("Unable to find Routers for all parts.  Please review log.")
+	F.Intrinsic.File.GetHandle(V.Local.iHndl)
+	F.Intrinsic.Task.ShellExec(V.Local.iHndl,"OPEN",V.local.sFILE,"","",1)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("ErrorsFiles_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3654_Forecast_Import.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.ErrorsFiles.End
+
+Program.Sub.Comments.Start
+${$0$}$GCG_3654_Forecast_Import$}$TRT$}$3/31/2016
+${$3$}$0$}$$}$-1$}$-1$}$$}$1/1/1900$}$Quote 7560-2
+ARC 3654
+TRT
+
+
+Program.Sub.Comments.End
+
